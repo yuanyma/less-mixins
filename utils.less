@@ -1,23 +1,57 @@
 /* Parametric Mixins for vendor-specific properties, with sensible defaults */
 
 .border-radius (@radius: 5px) {
-  border-radius: @radius;
-  -webkit-border-radius: @radius;
-  -moz-border-radius: @radius;
+  -webkit-border-radius:    @radius;
+  -moz-border-radius:       @radius;
+  border-radius:            @radius;
 }
 
-.box-shadow (@arguments: 0px 1px 4px 0px rgba(0, 0, 0, 0.3)) {
-    -webkit-box-shadow: @arguments;
-    -moz-box-shadow:    @arguments;
-    box-shadow:         @arguments;
+.border-radius-each(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+  -webkit-border-top-right-radius: @topright;
+  -webkit-border-bottom-right-radius: @bottomright;
+  -webkit-border-bottom-left-radius: @bottomleft;
+  -webkit-border-top-left-radius: @topleft;
+  -moz-border-radius-topright: @topright;
+  -moz-border-radius-bottomright: @bottomright;
+  -moz-border-radius-bottomleft: @bottomleft;
+  -moz-border-radius-topleft: @topleft;
+  border-top-right-radius: @topright;
+  border-bottom-right-radius: @bottomright;
+  border-bottom-left-radius: @bottomleft;
+  border-top-left-radius: @topleft;
+  -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; 
 }
 
-.transform (@arguments) {
-    -webkit-transform:  @arguments;
-    -moz-transform:     @arguments;
-    -ms-transform:      @arguments;
-    -o-transform:       @arguments;
-    transform:          @arguments;
+.drop-shadow(@horizontal: 0, @vertical: 1px, @blur: 2px, @spread: 0, @color: rgba(0, 0, 0, 0.3)) {
+    -webkit-box-shadow:   @arguments;
+    -moz-box-shadow:      @arguments;
+    box-shadow:           @arguments;
+}
+
+.inner-shadow(@horizontal: 0, @vertical: 1px, @blur: 2px, @spread: 0, @color: rgba(0, 0, 0, 0.3)) {
+    -webkit-box-shadow:   inset @arguments;
+    -moz-box-shadow:      inset @arguments;
+    box-shadow:           inset @arguments;
+}
+
+.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
+    background: @color;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, @start), color-stop(1, @stop));
+    background: -ms-linear-gradient(bottom, @start, @stop);
+    background: -moz-linear-gradient(center bottom, @start 0%, @stop 100%);
+}
+
+.opacity(@opacity: 0.5) {
+    -webkit-opacity:  @opacity;
+    -khtml-opacity:   @opacity;
+    -moz-opacity:     @opacity;
+    opacity:          @opacity;
+}
+
+.transition(@duration:0.2s, @ease:ease-out) {
+    -webkit-transition:   all @duration @ease;
+    -moz-transition:      all @duration @ease;
+    transition:           all @duration @ease;
 }
 
 .transform-origin (@arguments) {
@@ -26,6 +60,14 @@
     -ms-transform-origin:       @arguments;
     -o-transform-origin:        @arguments;
     transform-origin:           @arguments;
+}
+
+.transform (@arguments) {
+    -webkit-transform:  @arguments;
+    -moz-transform:     @arguments;
+    -ms-transform:      @arguments;
+    -o-transform:       @arguments;
+    transform:          @arguments;
 }
 
 /* Drop Shadows */
@@ -43,7 +85,7 @@
     .drop-shadow {
         background: #fff;
         position: relative;
-        .box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+        .drop-shadow(0 1px 4px 0 rgba(0, 0, 0, 0.3));
         &:before,
         &:after {
             content: '';
@@ -62,7 +104,7 @@
             height: 20%;
             max-width: 300px;
             max-height: 100px;
-            .box-shadow(0 15px 10px rgba(0, 0, 0, 0.3));
+            .drop-shadow(0 15px 10px 0 rgba(0, 0, 0, 0.3));
             .transform(rotate(-3deg));
         }
         &:after {
@@ -83,7 +125,7 @@
             height: 55%;
             max-width: 200px;
             max-height: 100px;
-            .box-shadow(0 8px 12px rgba(0, 0, 0, 0.5));
+            .drop-shadow(0 8px 12px 0 rgba(0, 0, 0, 0.5));
             .transform(skew(-8deg) rotate(-3deg));
         }
         &:after {
@@ -102,7 +144,7 @@
             height: 35%;
             max-width: 200px;
             max-height: 50px;
-            .box-shadow(-80px 0 8px rgba(0, 0, 0, 0.4));
+            .drop-shadow(-80px 0 8px 0 rgba(0, 0, 0, 0.4));
             .transform(skew(50deg));
             .transform-origin(0 100%);
         }
@@ -114,7 +156,7 @@
     
     /* Raised shadow - no pseudo-elements needed */
     .raised {
-        .box-shadow(~'0 15px 10px -10px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3)');
+        .drop-shadow(~'0 15px 10px -10px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3)');
     }
     
     /* Curved shadows */
@@ -125,7 +167,7 @@
             bottom: 10px;
             left: 0;
             right: 50%;
-            .box-shadow (0 0 15px rgba(0,0,0,0.6));
+            .drop-shadow (0 0 15px 0 rgba(0,0,0,0.6));
             .border-radius(~'10px / 100px');
         }
     }
