@@ -1,9 +1,16 @@
 /* Parametric Mixins for vendor-specific properties, with sensible defaults */
 
 .border-radius (@radius: 5px) {
-  -webkit-border-radius:    @radius;
-  -moz-border-radius:       @radius;
-  border-radius:            @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.box-sizing(@type: border-box) {
+    -webkit-box-sizing: @type;
+    -moz-box-sizing: @type;
+    -ms-box-sizing: @type;
+    box-sizing: @type;
 }
 
 .border-radius-each(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
@@ -19,19 +26,19 @@
   border-bottom-right-radius: @bottomright;
   border-bottom-left-radius: @bottomleft;
   border-top-left-radius: @topleft;
-  -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; 
+  -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;
 }
 
-.drop-shadow(@horizontal: 0, @vertical: 1px, @blur: 2px, @spread: 0, @color: rgba(0, 0, 0, 0.3)) {
-    -webkit-box-shadow:   @arguments;
-    -moz-box-shadow:      @arguments;
-    box-shadow:           @arguments;
+.drop-shadow(@shadow: 1px 1px 2px rgba(0, 0, 0, 0.25)) {
+    -webkit-box-shadow: @shadow;
+    -moz-box-shadow: @shadow;
+    box-shadow: @shadow;
 }
 
 .inner-shadow(@horizontal: 0, @vertical: 1px, @blur: 2px, @spread: 0, @color: rgba(0, 0, 0, 0.3)) {
-    -webkit-box-shadow:   inset @arguments;
-    -moz-box-shadow:      inset @arguments;
-    box-shadow:           inset @arguments;
+    -webkit-box-shadow: inset @arguments;
+    -moz-box-shadow: inset @arguments;
+    box-shadow: inset @arguments;
 }
 
 .text-shadow(@x: 1px, @y: 1px, @blur: 2px, @color: #666) {
@@ -46,24 +53,28 @@
 }
 
 .opacity(@opacity: 0.5) {
-    -webkit-opacity:  @opacity;
-    -khtml-opacity:   @opacity;
-    -moz-opacity:     @opacity;
-    opacity:          @opacity;
+    -webkit-opacity: @opacity;
+    -khtml-opacity: @opacity;
+    -moz-opacity: @opacity;
+    opacity: @opacity;
+    @opperc: @opacity * 100;
+    -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
+    filter: ~"alpha(opacity=@{opperc})";
 }
 
-.transition(@duration:0.2s, @ease:ease-out) {
-    -webkit-transition:   all @duration @ease;
-    -moz-transition:      all @duration @ease;
-    transition:           all @duration @ease;
+
+.transition(@transition) {
+    -webkit-transition: @transition;
+    -moz-transition: @transition;
+    transition: @transition;
 }
 
 .transform-origin (@arguments) {
-    -webkit-transform-origin:   @arguments;
-    -moz-transform-origin:      @arguments;
-    -ms-transform-origin:       @arguments;
-    -o-transform-origin:        @arguments;
-    transform-origin:           @arguments;
+    -webkit-transform-origin: @arguments;
+    -moz-transform-origin: @arguments;
+    -ms-transform-origin: @arguments;
+    -o-transform-origin: @arguments;
+    transform-origin: @arguments;
 }
 
 .transform (@arguments) {
@@ -74,153 +85,19 @@
     transform:          @arguments;
 }
 
-/* Drop Shadows */
-/* 
-    Based on Nicholas Gallagher's CSS drop-shadows without images:
-    http://nicolasgallagher.com/css-drop-shadows-without-images/
-*/
-
-    .box-shadow-container {
-        position: relative;
-        z-index: 0;
-    }
-
-    /* Shared styles */
-    .box-shadow {
-        background: #fff;
-        position: relative;
-        .drop-shadow(0, 1px, 4px, 0, rgba(0, 0, 0, 0.3));
-        &:before,
-        &:after {
-            content: '';
-            position: absolute;
-            z-index: -2;
-        }
-    }
-        
-    /* Lifted corners */
-    .lifted {
-        &:before,
-        &:after {
-            bottom: 15px;
-            left: 10px;
-            width: 50%;
-            height: 20%;
-            max-width: 300px;
-            max-height: 100px;
-            .drop-shadow(0, 15px, 10px, 0, rgba(0, 0, 0, 0.3));
-            .transform(rotate(-3deg));
-        }
-        &:after {
-            right: 10px;
-            left: auto;
-            .transform(rotate(3deg));
-        }
-    }
-    
-    /* Curled corners */
-    .curled {
-        .border-radius(~'0 0 120px 120px / 0 0 6px 6px');
-        &:before,
-        &:after {
-            bottom: 12px;
-            left: 10px;
-            width: 50%;
-            height: 55%;
-            max-width: 200px;
-            max-height: 100px;
-            .drop-shadow(0, 8px, 12px, 0, rgba(0, 0, 0, 0.5));
-            .transform(skew(-8deg) rotate(-3deg));
-        }
-        &:after {
-            right: 10px;
-            left: auto;
-            .transform(skew(8deg) rotate(3deg));
-         }
-     }
-     
-    /* Perspective */
-    .perspective {
-        &:before {
-            left: 80px;
-            bottom: 5px;
-            width: 50%;
-            height: 35%;
-            max-width: 200px;
-            max-height: 50px;
-            .drop-shadow(-80px, 0, 8px, 0, rgba(0, 0, 0, 0.4));
-            .transform(skew(50deg));
-            .transform-origin(0 100%);
-        }
-        &:after {
-            display: none;
-        }
-    }
-    
-    
-    /* Raised shadow - no pseudo-elements needed */
-    /* Should use mixin */
-    .raised {
-        -webkit-box-shadow:   0 15px 10px -10px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
-        -moz-box-shadow:      0 15px 10px -10px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
-        box-shadow:           0 15px 10px -10px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Curved shadows */
-    
-    .curved{
-        &:before {
-            top: 10px;
-            bottom: 10px;
-            left: 0;
-            right: 50%;
-            .drop-shadow (0, 0, 15px, 0, rgba(0,0,0,0.6));
-            .border-radius(~'10px / 100px');
-        }
-    }
-
-    .curved-vt-2 {
-        &:before {
-            right: 0;
-        }
-    }
-
-    .curved-hz-1 {
-        &:before {
-            top: 50%;
-            bottom: 0;
-            left: 10px;
-            right: 10px;
-            .border-radius(~'100px / 10px');
-        }
-    }
-    
-    .curved-hz-2 {
-        &:before {
-            top: 0;
-            bottom: 0;
-            left: 10px;
-            right: 10px;
-            .border-radius(~'100px / 10px');
-        }
-    }
-    
-    /* Rotated box */
-    .rotated(@deg: -2deg){
-        .transform(rotate(@deg));
-        > :first-child:before {
-            content:"";
-            position:absolute;
-            z-index:-1;
-            top:0;
-            bottom:0;
-            left:0;
-            right:0;
-            background:#fff;
-        }
-    }
+.filter(@filter: grayscale(100%)) {
+    -webkit-filter: @filter;
+    -moz-filter: @filter;
+    -ms-filter: @filter;
+    -o-filter: @filter;
+    filter: @filter;
+}
 
 /* Miscellaneous Utility Styles */
+
+.hidden {
+    display: none !important;
+}
 
 .align-center {
     text-align: center;
@@ -242,5 +119,150 @@
         visibility: hidden;
         line-height: 0;
         height: 0;
+    }
+}
+
+/*  Drop Shadows
+/*  Based on Nicholas Gallagher's CSS drop-shadows without images:
+/*  http://nicolasgallagher.com/css-drop-shadows-without-images/
+*/
+
+.box-shadow-container {
+    position: relative;
+    z-index: 0;
+}
+
+/* Shared styles */
+.box-shadow {
+    background: #fff;
+    position: relative;
+    .drop-shadow(0, 1px, 4px, 0, rgba(0, 0, 0, 0.3));
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        z-index: -2;
+    }
+}
+
+/* Lifted corners */
+.lifted {
+    &:before,
+    &:after {
+        bottom: 15px;
+        left: 10px;
+        width: 50%;
+        height: 20%;
+        max-width: 300px;
+        max-height: 100px;
+        .drop-shadow(0, 15px, 10px, 0, rgba(0, 0, 0, 0.3));
+        .transform(rotate(-3deg));
+    }
+    &:after {
+        right: 10px;
+        left: auto;
+        .transform(rotate(3deg));
+    }
+}
+
+/* Curled corners */
+.curled {
+    .border-radius(~'0 0 120px 120px / 0 0 6px 6px');
+    &:before,
+    &:after {
+        bottom: 12px;
+        left: 10px;
+        width: 50%;
+        height: 55%;
+        max-width: 200px;
+        max-height: 100px;
+        .drop-shadow(0, 8px, 12px, 0, rgba(0, 0, 0, 0.5));
+        .transform(skew(-8deg) rotate(-3deg));
+    }
+    &:after {
+        right: 10px;
+        left: auto;
+        .transform(skew(8deg) rotate(3deg));
+     }
+ }
+
+/* Perspective */
+.perspective {
+    &:before {
+        left: 80px;
+        bottom: 5px;
+        width: 50%;
+        height: 35%;
+        max-width: 200px;
+        max-height: 50px;
+        .drop-shadow(-80px, 0, 8px, 0, rgba(0, 0, 0, 0.4));
+        .transform(skew(50deg));
+        .transform-origin(0 100%);
+    }
+    &:after {
+        display: none;
+    }
+}
+
+
+/* Raised shadow - no pseudo-elements needed */
+/* Should use mixin */
+.raised {
+    -webkit-box-shadow:   0 15px 10px -10px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow:      0 15px 10px -10px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
+    box-shadow:           0 15px 10px -10px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Curved shadows */
+
+.curved{
+    &:before {
+        top: 10px;
+        bottom: 10px;
+        left: 0;
+        right: 50%;
+        .drop-shadow (0, 0, 15px, 0, rgba(0,0,0,0.6));
+        .border-radius(~'10px / 100px');
+    }
+}
+
+.curved-vt-2 {
+    &:before {
+        right: 0;
+    }
+}
+
+.curved-hz-1 {
+    &:before {
+        top: 50%;
+        bottom: 0;
+        left: 10px;
+        right: 10px;
+        .border-radius(~'100px / 10px');
+    }
+}
+
+.curved-hz-2 {
+    &:before {
+        top: 0;
+        bottom: 0;
+        left: 10px;
+        right: 10px;
+        .border-radius(~'100px / 10px');
+    }
+}
+
+/* Rotated box */
+.rotated(@deg: -2deg){
+    .transform(rotate(@deg));
+    > :first-child:before {
+        content:"";
+        position:absolute;
+        z-index:-1;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+        background:#fff;
     }
 }
